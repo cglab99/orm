@@ -1,0 +1,23 @@
+from datetime import datetime
+from sqlalchemy import Column, Integer, String, create_engine
+from sqlalchemy.orm import declarative_base, sessionmaker
+from pybo.models import Question
+
+# Database 지정
+engine = create_engine('sqlite:///pybo.db')
+
+# ORM 사용
+Base = declarative_base()
+
+# 세션 생성
+Session = sessionmaker(bind=engine)
+session = Session()
+
+# 세션에 추가하고 커밋
+q = Question(subject='플라스크 모델 질문입니다.', content='id는 자동으로 생성되나요?', create_date=datetime.now())
+session.add(q)
+session.commit()
+
+q = session.query(Question).all()
+for i in q:
+     print( i.id, i.subject, i.content )
